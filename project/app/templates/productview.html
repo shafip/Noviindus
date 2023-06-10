@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+    <div class="container mt-5">
+  <div class="row justify-content-center">
+{% for item in product %}
+
+    <div class="col-lg-3 h-100  col-md-4 col-sm-6 mb-4">
+      <div class="card h-10">
+          <img src="{{ item.image.url }}" class="card-img-top" alt="...">
+        <div class="card-body" id="">
+          <h5 class="card-title text-center">{{item.product}}</h5>
+          <p class="card-text text-center">Brand: {{item.brand}}</p>
+          <h6 class="card-subtitle mb-2 text-muted text-center">RS {{item.price}}</h6>
+        </div>
+    <div class="d-grid p-2 gap-2">
+        <button class="btn btn-primary btn-sm add-to-cart-btn" data-product-id="{{ item.id }}">Add Cart</button>
+
+    </div>
+
+
+      </div>
+    </div>
+
+{% endfor %}
+</div>
+</div>
+
+{% endblock %}
+
+{% block scriptcontent %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
+<script>
+  $(document).ready(function() {
+  $(".add-to-cart-btn").on("click", function() {
+    var product_id = $(this).data("product-id");
+    console.log(product_id)
+    $.ajax({
+      type: "POST",
+      url: "/add_to_cart/" + product_id + "/",
+      dataType: "json",
+      success: function(data) {
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Product Added',
+          showConfirmButton: false,
+          timer: 1500
+        });
+      },
+      error: function(xhr, textStatus, errorThrown) {
+
+        console.log("Error: " + errorThrown);
+      }
+    }).done(function(data) {
+        if (data.success === false) {
+
+          Swal.fire({
+            position: 'center',
+            icon: 'warning',
+            title: 'Sorry Out Of Stock',
+            showConfirmButton: false,
+            timer: 1500
+          });
+        }
+    });
+  });
+});
+
+</script>
+{% endblock %}

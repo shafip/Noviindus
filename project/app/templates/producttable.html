@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="row">
+    <div class="col-2"></div>
+    <div class="col-8 mt-5 ">
+        <table class="table">
+  <thead>
+  <tr>
+    <th>Image</th>
+    <th>Name</th>
+    <th>Brand</th>
+    <th>Price</th>
+    <th>
+        <a href="{% url 'add_product'  %}"><button type="button" class="btn btn-success btn-sm">Add Product</button></a>
+    </th>
+  </tr>
+</thead>
+  <tbody>
+    {% for item in product %}
+      <tr>
+      <td ><img src="{{ item.image.url }}" alt="" style="width: 100px; height: 100px;"></td>
+
+        <td>{{ item.name }}</td>
+        <td>{{ item.brand }}</td>
+           <td>{{ item.price }}</td>
+          <td><a href="{% url 'update_product' pk=item.id %}"><button type="button" class="btn btn-warning btn-sm">Edit</button></a></td>
+          <td>
+          <form method="POST" action="{% url 'product-delete' pk=item.id %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+</form>
+          </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+    </div>
+    <div class="col-2"></div>
+</div>
+
+
+{% endblock %}
+
+
